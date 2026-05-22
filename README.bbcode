@@ -7,7 +7,7 @@ A Discord-style typing indicator that shows who is currently typing in your acti
 [list]
 [*][b]Discord-style display[/b]: Shows "User is typing..." or "User1, User2, and User3 are typing..." for multiple users
 [*][b]Real-time updates[/b]: Automatically updates when switching between channels/PMs
-[*][b]Quick toggle[/b]: Press [font=Courier New]F5[/font] to enable/disable the typing indicator
+[*][b]Quick toggle[/b]: Press [inlinecode]F5[/inlinecode] to enable/disable the typing indicator
 [*][b]Auto-cleanup[/b]: Automatically removes typing states when users part, quit, or when you close windows
 [*][b]Works in channels and PMs[/b]: Tracks typing in both public channels and private messages
 [/list]
@@ -17,19 +17,19 @@ A Discord-style typing indicator that shows who is currently typing in your acti
 [list]
 [*][b]mIRC[/b] (tested on modern versions)
 [*][b]DCX (Dialog Control Extension)[/b] - Required for the XStatusbar functionality
-[*][b]IRC server with IRCv3 typing tags support[/b] - The server must support the [font=Courier New]+typing[/font] message tag
+[*][b]IRC server with IRCv3 typing tags support[/b] - The server must support the [inlinecode]+typing[/inlinecode] message tag
 [/list]
 
 [b][size=150]Installation[/size][/b]
 
 [list=1]
 [*]Make sure you have DCX installed and loaded in mIRC
-[*]Copy [font=Courier New]typing-indicator.mrc[/font] to your mIRC scripts folder
+[*]Copy [inlinecode]typing-indicator.mrc[/inlinecode] to your mIRC scripts folder
 [*]Load the script in mIRC:
    [list]
    [*]Open mIRC
-   [*]Press [font=Courier New]Alt+R[/font] to open the Scripts Editor
-   [*]Click [font=Courier New]File[/font] → [font=Courier New]Load[/font] and select [font=Courier New]typing-indicator.mrc[/font]
+   [*]Press [inlinecode]Alt+R[/inlinecode] to open the Scripts Editor
+   [*]Click [inlinecode]File[/inlinecode] → [inlinecode]Load[/inlinecode] and select [inlinecode]typing-indicator.mrc[/inlinecode]
    [/list]
 [*]The typing indicator will automatically initialize on startup
 [/list]
@@ -44,24 +44,24 @@ A Discord-style typing indicator that shows who is currently typing in your acti
 [th]Description[/th]
 [/tr]
 [tr]
-[td][font=Courier New]F5[/font][/td]
+[td][inlinecode]F5[/inlinecode][/td]
 [td]Toggle the typing indicator on/off[/td]
 [/tr]
 [tr]
-[td][font=Courier New]/test_typing <nick>[/font][/td]
+[td][inlinecode]/test_typing <nick>[/inlinecode][/td]
 [td]Test the indicator by simulating a user typing[/td]
 [/tr]
 [/table]
 
 [b]How It Works[/b]
 
-The script listens for IRCv3 [font=Courier New]TAGMSG[/font] messages with the [font=Courier New]+typing[/font] tag. When a user starts typing in your active channel or PM, their name appears in the statusbar at the bottom of the window.
+The script listens for IRCv3 [inlinecode]TAGMSG[/inlinecode] messages with the [inlinecode]+typing[/inlinecode] tag. When a user starts typing in your active channel or PM, their name appears in the statusbar at the bottom of the window.
 
 [b]Typing states:[/b]
 [list]
-[*][font=Courier New]active[/font] - User is actively typing
-[*][font=Courier New]paused[/font] - User paused typing (still shown)
-[*][font=Courier New]done[/font] - User stopped typing (removed from display)
+[*][inlinecode]active[/inlinecode] - User is actively typing
+[*][inlinecode]paused[/inlinecode] - User paused typing (still shown)
+[*][inlinecode]done[/inlinecode] - User stopped typing (removed from display)
 [/list]
 
 [b]Display formats:[/b]
@@ -92,26 +92,26 @@ This simulates JohnDoe typing in your active channel/PM.
 [list]
 [*]Make sure DCX is properly installed and loaded
 [*]Verify your IRC server supports IRCv3 typing tags
-[*]Check that the indicator is enabled (press [font=Courier New]F5[/font] to toggle)
+[*]Check that the indicator is enabled (press [inlinecode]F5[/inlinecode] to toggle)
 [/list]
 
 [b]Typing states not clearing:[/b]
 [list]
 [*]States are cleared when users part/quit or you close windows
-[*]States are also cleared when users send the [font=Courier New]done[/font] typing state
+[*]States are also cleared when users send the [inlinecode]done[/inlinecode] typing state
 [/list]
 
 [b]DCX errors:[/b]
 [list]
 [*]Ensure you have the latest version of DCX installed
-[*]Try reloading the script with [font=Courier New]/reload -rs typing-indicator.mrc[/font]
+[*]Try reloading the script with [inlinecode]/reload -rs typing-indicator.mrc[/inlinecode]
 [/list]
 
 [b][size=150]Technical Details[/size][/b]
 
 [list]
-[*][b]Hash table[/b]: Uses [font=Courier New]typing_users[/font] hash table to track who is typing
-[*][b]Storage format[/b]: Keys are [font=Courier New]channel§nick[/font] (using chr(247) as delimiter)
+[*][b]Hash table[/b]: Uses [inlinecode]typing_users[/inlinecode] hash table to track who is typing
+[*][b]Storage format[/b]: Keys are [inlinecode]channel§nick[/inlinecode] (using chr(247) as delimiter)
 [*][b]Values[/b]: Unix timestamp of when typing started
 [*][b]Cleanup[/b]: Event-driven when users part/quit or windows close
 [/list]
