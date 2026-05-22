@@ -9,9 +9,8 @@ _Shows "User1 is typing..." when someone is actively typing_
 
 - **Discord-style display**: Shows "User is typing..." or "User1, User2, and User3 are typing..." for multiple users
 - **Real-time updates**: Automatically updates when switching between channels/PMs
-- **Smart cleanup**: Automatically removes stale typing states after 10 seconds
 - **Quick toggle**: Press `F5` to enable/disable the typing indicator
-- **Auto-cleanup**: Removes typing states when users part, quit, or when you close windows
+- **Auto-cleanup**: Automatically removes typing states when users part, quit, or when you close windows
 - **Works in channels and PMs**: Tracks typing in both public channels and private messages
 
 ## Requirements
@@ -57,9 +56,8 @@ The script listens for IRCv3 `TAGMSG` messages with the `+typing` tag. When a us
 ### Automatic Behavior
 
 - **Auto-start**: The indicator initializes automatically when mIRC starts
-- **Auto-cleanup**: Typing states are removed after 10 seconds of inactivity
 - **Auto-refresh**: Display updates when you switch windows
-- **Auto-remove**: Clears typing states when users part, quit, or you close windows
+- **Auto-cleanup**: Clears typing states when users part, quit, or you close windows
 
 ## Testing
 
@@ -81,9 +79,8 @@ This simulates JohnDoe typing in your active channel/PM.
 
 **Typing states not clearing:**
 
-- The script automatically cleans up states every 3 seconds
-- States older than 10 seconds are automatically removed
-- States are also cleared when users part/quit or you close windows
+- States are cleared when users part/quit or you close windows
+- States are also cleared when users send the `done` typing state
 
 **DCX errors:**
 
@@ -95,8 +92,7 @@ This simulates JohnDoe typing in your active channel/PM.
 - **Hash table**: Uses `typing_users` hash table to track who is typing
 - **Storage format**: Keys are `channel§nick` (using chr(247) as delimiter)
 - **Values**: Unix timestamp of when typing started
-- **Cleanup timer**: Runs every 3 seconds to purge stale entries
-- **Timeout**: Typing states expire after 10 seconds
+- **Cleanup**: Event-driven when users part/quit or windows close
 
 ## Credits
 

@@ -7,9 +7,8 @@ A Discord-style typing indicator that shows who is currently typing in your acti
 [list]
 [*][b]Discord-style display[/b]: Shows "User is typing..." or "User1, User2, and User3 are typing..." for multiple users
 [*][b]Real-time updates[/b]: Automatically updates when switching between channels/PMs
-[*][b]Smart cleanup[/b]: Automatically removes stale typing states after 10 seconds
 [*][b]Quick toggle[/b]: Press [font=Courier New]F5[/font] to enable/disable the typing indicator
-[*][b]Auto-cleanup[/b]: Removes typing states when users part, quit, or when you close windows
+[*][b]Auto-cleanup[/b]: Automatically removes typing states when users part, quit, or when you close windows
 [*][b]Works in channels and PMs[/b]: Tracks typing in both public channels and private messages
 [/list]
 
@@ -75,9 +74,8 @@ The script listens for IRCv3 [font=Courier New]TAGMSG[/font] messages with the [
 
 [list]
 [*][b]Auto-start[/b]: The indicator initializes automatically when mIRC starts
-[*][b]Auto-cleanup[/b]: Typing states are removed after 10 seconds of inactivity
 [*][b]Auto-refresh[/b]: Display updates when you switch windows
-[*][b]Auto-remove[/b]: Clears typing states when users part, quit, or you close windows
+[*][b]Auto-cleanup[/b]: Clears typing states when users part, quit, or you close windows
 [/list]
 
 [b][size=150]Testing[/size][/b]
@@ -99,9 +97,8 @@ This simulates JohnDoe typing in your active channel/PM.
 
 [b]Typing states not clearing:[/b]
 [list]
-[*]The script automatically cleans up states every 3 seconds
-[*]States older than 10 seconds are automatically removed
-[*]States are also cleared when users part/quit or you close windows
+[*]States are cleared when users part/quit or you close windows
+[*]States are also cleared when users send the [font=Courier New]done[/font] typing state
 [/list]
 
 [b]DCX errors:[/b]
@@ -116,8 +113,7 @@ This simulates JohnDoe typing in your active channel/PM.
 [*][b]Hash table[/b]: Uses [font=Courier New]typing_users[/font] hash table to track who is typing
 [*][b]Storage format[/b]: Keys are [font=Courier New]channel§nick[/font] (using chr(247) as delimiter)
 [*][b]Values[/b]: Unix timestamp of when typing started
-[*][b]Cleanup timer[/b]: Runs every 3 seconds to purge stale entries
-[*][b]Timeout[/b]: Typing states expire after 10 seconds
+[*][b]Cleanup[/b]: Event-driven when users part/quit or windows close
 [/list]
 
 [b][size=150]Credits[/size][/b]

@@ -49,16 +49,12 @@ alias -l init_typing_indicator {
 
   ; Initialize typing tracking hash table
   if (!$hget(typing_users)) { hmake typing_users 100 }
-
-  ; Start cleanup timer (runs every 3 seconds to remove stale entries)
-  .timertypingcleanup 0 3 cleanup_stale_typing
 }
 
 ; Remove typing indicator statusbar
 alias -l remove_typing_indicator {
   xstatusbar -A 0
   if ($hget(typing_users)) { hfree typing_users }
-  .timertypingcleanup off
 }
 
 ; Update the typing indicator display
