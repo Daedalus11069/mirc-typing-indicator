@@ -1,0 +1,129 @@
+[size=200][b]Discord-like Typing Indicator for mIRC[/b][/size]
+
+A Discord-style typing indicator that shows who is currently typing in your active channel or private message, displayed at the bottom of the mIRC window using a statusbar.
+
+[b][size=150]Features[/size][/b]
+
+[list]
+[*][b]Discord-style display[/b]: Shows "User is typing..." or "User1, User2, and User3 are typing..." for multiple users
+[*][b]Real-time updates[/b]: Automatically updates when switching between channels/PMs
+[*][b]Smart cleanup[/b]: Automatically removes stale typing states after 10 seconds
+[*][b]Quick toggle[/b]: Press [font=Courier New]F5[/font] to enable/disable the typing indicator
+[*][b]Auto-cleanup[/b]: Removes typing states when users part, quit, or when you close windows
+[*][b]Works in channels and PMs[/b]: Tracks typing in both public channels and private messages
+[/list]
+
+[b][size=150]Requirements[/size][/b]
+
+[list]
+[*][b]mIRC[/b] (tested on modern versions)
+[*][b]DCX (Dialog Control Extension)[/b] - Required for the XStatusbar functionality
+[*][b]IRC server with IRCv3 typing tags support[/b] - The server must support the [font=Courier New]+typing[/font] message tag
+[/list]
+
+[b][size=150]Installation[/size][/b]
+
+[list=1]
+[*]Make sure you have DCX installed and loaded in mIRC
+[*]Copy [font=Courier New]typing-indicator.mrc[/font] to your mIRC scripts folder
+[*]Load the script in mIRC:
+   [list]
+   [*]Open mIRC
+   [*]Press [font=Courier New]Alt+R[/font] to open the Scripts Editor
+   [*]Click [font=Courier New]File[/font] → [font=Courier New]Load[/font] and select [font=Courier New]typing-indicator.mrc[/font]
+   [/list]
+[*]The typing indicator will automatically initialize on startup
+[/list]
+
+[b][size=150]Usage[/size][/b]
+
+[b]Commands[/b]
+
+[table="head"]
+[tr]
+[th]Command[/th]
+[th]Description[/th]
+[/tr]
+[tr]
+[td][font=Courier New]F5[/font][/td]
+[td]Toggle the typing indicator on/off[/td]
+[/tr]
+[tr]
+[td][font=Courier New]/test_typing <nick>[/font][/td]
+[td]Test the indicator by simulating a user typing[/td]
+[/tr]
+[/table]
+
+[b]How It Works[/b]
+
+The script listens for IRCv3 [font=Courier New]TAGMSG[/font] messages with the [font=Courier New]+typing[/font] tag. When a user starts typing in your active channel or PM, their name appears in the statusbar at the bottom of the window.
+
+[b]Typing states:[/b]
+[list]
+[*][font=Courier New]active[/font] - User is actively typing
+[*][font=Courier New]paused[/font] - User paused typing (still shown)
+[*][font=Courier New]done[/font] - User stopped typing (removed from display)
+[/list]
+
+[b]Display formats:[/b]
+[list]
+[*]Single user: [i]User1 is typing...[/i]
+[*]Multiple users: [i]User1, User2, and User3 are typing...[/i]
+[/list]
+
+[b]Automatic Behavior[/b]
+
+[list]
+[*][b]Auto-start[/b]: The indicator initializes automatically when mIRC starts
+[*][b]Auto-cleanup[/b]: Typing states are removed after 10 seconds of inactivity
+[*][b]Auto-refresh[/b]: Display updates when you switch windows
+[*][b]Auto-remove[/b]: Clears typing states when users part, quit, or you close windows
+[/list]
+
+[b][size=150]Testing[/size][/b]
+
+To test the indicator without waiting for real typing events:
+
+[code]/test_typing JohnDoe[/code]
+
+This simulates JohnDoe typing in your active channel/PM.
+
+[b][size=150]Troubleshooting[/size][/b]
+
+[b]Indicator not showing:[/b]
+[list]
+[*]Make sure DCX is properly installed and loaded
+[*]Verify your IRC server supports IRCv3 typing tags
+[*]Check that the indicator is enabled (press [font=Courier New]F5[/font] to toggle)
+[/list]
+
+[b]Typing states not clearing:[/b]
+[list]
+[*]The script automatically cleans up states every 3 seconds
+[*]States older than 10 seconds are automatically removed
+[*]States are also cleared when users part/quit or you close windows
+[/list]
+
+[b]DCX errors:[/b]
+[list]
+[*]Ensure you have the latest version of DCX installed
+[*]Try reloading the script with [font=Courier New]/reload -rs typing-indicator.mrc[/font]
+[/list]
+
+[b][size=150]Technical Details[/size][/b]
+
+[list]
+[*][b]Hash table[/b]: Uses [font=Courier New]typing_users[/font] hash table to track who is typing
+[*][b]Storage format[/b]: Keys are [font=Courier New]channel§nick[/font] (using chr(247) as delimiter)
+[*][b]Values[/b]: Unix timestamp of when typing started
+[*][b]Cleanup timer[/b]: Runs every 3 seconds to purge stale entries
+[*][b]Timeout[/b]: Typing states expire after 10 seconds
+[/list]
+
+[b][size=150]Credits[/size][/b]
+
+Created for mIRC users who want a modern Discord-like typing experience in their IRC client.
+
+[b][size=150]License[/size][/b]
+
+Free to use and modify. No warranty provided.

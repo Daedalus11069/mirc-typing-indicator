@@ -49,12 +49,16 @@ alias -l init_typing_indicator {
 
   ; Initialize typing tracking hash table
   if (!$hget(typing_users)) { hmake typing_users 100 }
+
+  ; Start cleanup timer (runs every 3 seconds to remove stale entries)
+  .timertypingcleanup 0 3 cleanup_stale_typing
 }
 
 ; Remove typing indicator statusbar
 alias -l remove_typing_indicator {
   xstatusbar -A 0
   if ($hget(typing_users)) { hfree typing_users }
+  .timertypingcleanup off
 }
 
 ; Update the typing indicator display
@@ -135,8 +139,8 @@ alias -l set_user_typing {
   var %key = %chan $+ $chr(247) $+ %nick
 
   if ((%state == active) || (%state == paused)) {
-    ; User is typing - add to hash table
-    hadd typing_users %key 1
+    ; User is typing - add to hash table with current timestamp
+    hadd typing_users %key $ctime
   }
   elseif (%state == done) {
     ; User stopped typing - remove
@@ -147,6 +151,89 @@ alias -l set_user_typing {
 
   ; Immediate update
   update_typing_display
+}
+
+; Clean up stale typing entries (older than 10 seconds)
+alias -l cleanup_stale_typing {
+  if (!$hget(typing_users)) { return }
+
+  var %now = $ctime
+  var %timeout = 10
+  var %i = 1
+  var %needsUpdate = $false
+
+  while (%i <= $hget(typing_users, 0).item) {
+    var %item = $hget(typing_users, %i).item
+    var %timestamp = $hget(typing_users, %item)
+
+    ; Remove if older than timeout
+    if ((%now - %timestamp) > %timeout) {
+      hdel typing_users %item
+      %needsUpdate = $true
+      ; Don't increment %i since we deleted an item
+    }
+    else {
+      inc %i
+    }
+  }
+
+  ; Update display if we removed anything
+  if (%needsUpdate) {
+    update_typing_display
+  }
+}
+
+; Clear typing state for a specific user across all channels
+alias -l clear_user_typing {
+  if (!$hget(typing_users)) { return }
+
+  var %nick = $1
+  var %i = 1
+  var %needsUpdate = $false
+
+  while (%i <= $hget(typing_users, 0).item) {
+    var %item = $hget(typing_users, %i).item
+    var %item_nick = $gettok(%item, 2, 247)
+
+    if (%item_nick == %nick) {
+      hdel typing_users %item
+      %needsUpdate = $true
+      ; Don't increment since we deleted an item
+    }
+    else {
+      inc %i
+    }
+  }
+
+  if (%needsUpdate) {
+    update_typing_display
+  }
+}
+
+; Clear all typing states for a specific channel
+alias clear_channel_typing {
+  if (!$hget(typing_users)) { return }
+
+  var %chan = $1
+  var %i = 1
+  var %needsUpdate = $false
+
+  while (%i <= $hget(typing_users, 0).item) {
+    var %item = $hget(typing_users, %i).item
+    var %item_chan = $gettok(%item, 1, 247)
+
+    if (%item_chan == %chan) {
+      hdel typing_users %item
+      %needsUpdate = $true
+    }
+    else {
+      inc %i
+    }
+  }
+
+  if (%needsUpdate) {
+    update_typing_display
+  }
 }
 
 raw tagmsg:*: {
@@ -199,4 +286,19 @@ on *:START: {
 on *:EXIT: {
   ; Cleanup on exit
   remove_typing_indicator
+}
+
+; Clean up when users part channels
+on *:PART:#: {
+  clear_user_typing $nick
+}
+
+; Clean up when users quit
+on *:QUIT: {
+  clear_user_typing $nick
+}
+
+; Clean up when closing a query/channel window
+on *:CLOSE:?:,#: {
+  clear_channel_typing $target
 }
